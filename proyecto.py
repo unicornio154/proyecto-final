@@ -44,7 +44,7 @@ if 'precio_unitario' in df.columns:
     df['ingresos'] = df['cantidad'] * df['precio_unitario']
     ingresos = df.groupby('producto')['ingresos'].sum().sort_values(ascending=False)
     resumen = pd.DataFrame({'Producto': ingresos.index, 'Ingresos Totales': ingresos.map("${:,.2f}".format)})
-    
+
     # Calcular promedios
     promedios = (df.groupby('producto')['cantidad'].sum() / 6).round(2)
     prom_df = pd.DataFrame({'Producto': promedios.index, 'Promedio Mensual': promedios.values})
@@ -52,20 +52,25 @@ if 'precio_unitario' in df.columns:
     # Crear figura con dos tablas
     fig, (ax, ax_prom) = plt.subplots(2, 1, figsize=(8, 6))
     fig.suptitle('Resumen Financiero y de Ventas', fontsize=14, fontweight='bold')
-    
-    # Tabla de ingresos
+
+    # Tabla de ingresos con estilo
     ax.axis('off')
-    ax.table(cellText=resumen.values, colLabels=resumen.columns, loc='center', cellLoc='center').scale(1, 1.4)
+    tabla1 = ax.table(cellText=resumen.values, colLabels=resumen.columns, loc='center', cellLoc='center', colColours=["#A7C7E7"]*2)
+    tabla1.auto_set_font_size(False)
+    tabla1.set_fontsize(10)
+    tabla1.scale(1, 1.4)
     ax.set_title('Ingresos por Producto', fontsize=12, pad=10)
-    
-    # Tabla de promedios
+
+    # Tabla de promedios con estilo
     ax_prom.axis('off')
-    ax_prom.table(cellText=prom_df.values, colLabels=prom_df.columns, loc='center', cellLoc='center').scale(1, 1.4)
+    tabla2 = ax_prom.table(cellText=prom_df.values, colLabels=prom_df.columns, loc='center', cellLoc='center', colColours=["#B5EAD7"]*2)
+    tabla2.auto_set_font_size(False)
+    tabla2.set_fontsize(10)
+    tabla2.scale(1, 1.4)
     ax_prom.set_title('Promedio Mensual por Producto', fontsize=12, pad=10)
-    
+
     plt.figtext(0.5, 0.01, "Resumen financiero y de ventas promedio durante 6 meses.", ha='center', fontsize=9, style='italic')
     plt.tight_layout(); plt.subplots_adjust(hspace=0.5)
     plt.show()
 else:
     print("Falta la columna 'precio_unitario'.")
-
